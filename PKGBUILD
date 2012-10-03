@@ -20,10 +20,10 @@ _uploadprogress_ver="v0.8.4"
 _upstreamfair_hash="a18b4099fbd458111983200e098b6f0c8efed4bc"
 _fancyindex_ver="master"
 
-pkgname=nginx-custom
-pkgver=1.2.4
+pkgname=nginx-custom-dev
+pkgver=1.3.7
 pkgrel=1
-pkgdesc="lightweight HTTP server and IMAP/POP3 proxy server with standard, additional and 3d party modules"
+pkgdesc="Development version of lightweight HTTP server and IMAP/POP3 proxy server with standard, additional and 3d party modules"
 arch=('i686' 'x86_64')
 
 depends=('pcre' 'zlib' 'openssl')
@@ -34,7 +34,7 @@ makedepends=(
 
 url="http://nginx.org"
 license=('custom')
-conflicts=('nginx' 'nginx-unstable' 'nginx-svn' 'nginx-devel' 'nginx-custom-dev') 
+conflicts=('nginx' 'nginx-unstable' 'nginx-svn' 'nginx-devel' 'nginx-custom') 
 provides=('nginx')
 backup=("${_conf_path#/}/conf/nginx.conf"
 	"${_conf_path#/}/conf/koi-win"
@@ -61,7 +61,7 @@ source=("http://nginx.org/download/nginx-$pkgver.tar.gz"
 		"nginx.conf"
 		"nginx.logrotate")
 
-md5sums=('a7c9a515f632c8cbb07ab67392208088'
+md5sums=('80cb727c31c80b9afcce277b9afa2491'
          '6805b78240f1d0b9531de3812eafcbf1'
          'bc92b2d326e0ab937b4cf5ab489e71e3'
          '9a6acb984d81f5d7e04214d63ae94273'
