@@ -125,6 +125,7 @@ build() {
 		--with-http_secure_link_module \
 		--with-http_perl_module \
 		--with-http_degradation_module \
+		--with-http_gunzip_module \
 		--add-module=../${_cachepurge_dirname} \
 		--add-module=../${_echo_dirname} \
 		--add-module=../${_headersmore_dirname} \
