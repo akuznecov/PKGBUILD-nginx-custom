@@ -34,7 +34,7 @@ makedepends=(
 
 url="http://nginx.org"
 license=('custom')
-conflicts=('nginx' 'nginx-unstable' 'nginx-svn' 'nginx-devel') 
+conflicts=('nginx' 'nginx-unstable' 'nginx-svn' 'nginx-devel' 'nginx-custom-dev') 
 provides=('nginx')
 backup=("${_conf_path#/}/conf/nginx.conf"
 	"${_conf_path#/}/conf/koi-win"
