@@ -22,7 +22,7 @@ _fancyindex_ver="master"
 
 pkgname=nginx-custom-dev
 pkgver=1.3.7
-pkgrel=1
+pkgrel=2
 pkgdesc="Development version of lightweight HTTP server and IMAP/POP3 proxy server with standard, additional and 3d party modules"
 arch=('i686' 'x86_64')
 
@@ -57,6 +57,7 @@ source=("http://nginx.org/download/nginx-$pkgver.tar.gz"
 		"https://github.com/agentzh/echo-nginx-module/tarball/${_echo_ver}"
 		"https://github.com/gnosek/nginx-upstream-fair/tarball/${_upstreamfair_hash}"
 		"ngx_fancyindex-${_fancyindex_ver}::http://gitorious.org/ngx-fancyindex/ngx-fancyindex/archive-tarball/${_fancyindex_ver}"
+		"http://nginx.org/patches/spdy/patch.spdy.txt"
 		"nginx.sh"
 		"nginx.conf"
 		"nginx.logrotate")
@@ -69,6 +70,7 @@ md5sums=('80cb727c31c80b9afcce277b9afa2491'
          '81f37d32bed8ca360fcdc3f58c7574a9'
          'ac5e7f485476af70e0ee1c52016cddaf'
          '8db9d2ef8b7ac63f9e23901dc3d36ab1'
+         '32f73798a8ae6258dda7cad1398f26f7'
          '0e8032d3ba26c3276e8c7c30588d375f'
          '1fe7a3ca0773ce13f9f92e239a99f8b9'
          '9dfca4c46969d3f620ed40b12c560637')
@@ -91,6 +93,8 @@ build() {
 	mv ngx-fancyindex-ngx-fancyindex ${_fancyindex_dirname}
 
 	cd $_src_dir
+
+	patch -p0 < ../patch.spdy.txt
 
 	./configure \
 		--prefix="/${_conf_path}" \
