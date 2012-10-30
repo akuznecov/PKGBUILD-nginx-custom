@@ -21,8 +21,8 @@ _upstreamfair_hash="a18b4099fbd458111983200e098b6f0c8efed4bc"
 _fancyindex_ver="master"
 
 pkgname=nginx-custom-dev
-pkgver=1.3.7
-pkgrel=2
+pkgver=1.3.8
+pkgrel=1
 pkgdesc="Development version of lightweight HTTP server and IMAP/POP3 proxy server with standard, additional and 3d party modules"
 arch=('i686' 'x86_64')
 
@@ -62,7 +62,7 @@ source=("http://nginx.org/download/nginx-$pkgver.tar.gz"
 		"nginx.conf"
 		"nginx.logrotate")
 
-md5sums=('80cb727c31c80b9afcce277b9afa2491'
+md5sums=('538dce8d18b7a2c855134668d6078252'
          '6805b78240f1d0b9531de3812eafcbf1'
          'bc92b2d326e0ab937b4cf5ab489e71e3'
          '9a6acb984d81f5d7e04214d63ae94273'
