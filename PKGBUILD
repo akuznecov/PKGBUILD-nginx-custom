@@ -19,9 +19,10 @@ _headersmore_ver="v0.18"
 _uploadprogress_ver="v0.8.4"
 _upstreamfair_hash="a18b4099fbd458111983200e098b6f0c8efed4bc"
 _fancyindex_ver="master"
+_httpupload_ver="2.2.0"
 
 pkgname=nginx-custom-dev
-pkgver=1.3.8
+pkgver=1.3.9
 pkgrel=1
 pkgdesc="Development version of lightweight HTTP server and IMAP/POP3 proxy server with standard, additional and 3d party modules"
 arch=('i686' 'x86_64')
@@ -57,12 +58,14 @@ source=("http://nginx.org/download/nginx-$pkgver.tar.gz"
 		"https://github.com/agentzh/echo-nginx-module/tarball/${_echo_ver}"
 		"https://github.com/gnosek/nginx-upstream-fair/tarball/${_upstreamfair_hash}"
 		"ngx_fancyindex-${_fancyindex_ver}::http://gitorious.org/ngx-fancyindex/ngx-fancyindex/archive-tarball/${_fancyindex_ver}"
+		"https://github.com/vkholodkov/nginx-upload-module/tarball/${_httpupload_ver}"
 		"http://nginx.org/patches/spdy/patch.spdy.txt"
 		"nginx.sh"
 		"nginx.conf"
-		"nginx.logrotate")
+		"nginx.logrotate"
+		"nginx.service")
 
-md5sums=('538dce8d18b7a2c855134668d6078252'
+md5sums=('b5a7a8d092772d370969a9ff7f7e3548'
          '6805b78240f1d0b9531de3812eafcbf1'
          'bc92b2d326e0ab937b4cf5ab489e71e3'
          '9a6acb984d81f5d7e04214d63ae94273'
@@ -70,10 +73,12 @@ md5sums=('538dce8d18b7a2c855134668d6078252'
          '81f37d32bed8ca360fcdc3f58c7574a9'
          'ac5e7f485476af70e0ee1c52016cddaf'
          '8db9d2ef8b7ac63f9e23901dc3d36ab1'
-         '32f73798a8ae6258dda7cad1398f26f7'
+         '8766b931f29602889e0454749580a781'
+         '0cd3c15ebd87bdc8a90321f7eeb449b7'
          '0e8032d3ba26c3276e8c7c30588d375f'
          '1fe7a3ca0773ce13f9f92e239a99f8b9'
-         '9dfca4c46969d3f620ed40b12c560637')
+         '9dfca4c46969d3f620ed40b12c560637'
+         'fd9f6a3600d2a7286a22c6cb0d2dcf2a')
 
 build() {
 	local _src_dir="${srcdir}/${_pkgname}-${pkgver}"
@@ -85,12 +90,14 @@ build() {
 	local _uploadprogess_dirname="ngx_upload_progress-${_uploadprogress_ver}"
 	local _upstreamfair_dirname="ngx_upstream_fair"
 	local _fancyindex_dirname="ngx_fancyindex"
+	local _upload_dirname="ngx_http_upload-${_upload_ver}"
 
 	mv agentzh-headers-more-nginx-module-* ${_headersmore_dirname}
 	mv agentzh-echo-nginx-module-* ${_echo_dirname}
 	mv masterzen-nginx-upload-progress-module-* ${_uploadprogess_dirname}
 	mv gnosek-nginx-upstream-fair-* ${_upstreamfair_dirname}
 	mv ngx-fancyindex-ngx-fancyindex ${_fancyindex_dirname}
+	mv vkholodkov-nginx-upload-module* ${_upload_dirname}
 
 	cd $_src_dir
 
@@ -136,7 +143,8 @@ build() {
 		--add-module=../${_slowfscache_dirname} \
 		--add-module=../${_uploadprogess_dirname} \
 		--add-module=../${_upstreamfair_dirname} \
-		--add-module=../${_fancyindex_dirname}
+		--add-module=../${_fancyindex_dirname} \
+		--add-module=../${_upload_dirname}
 
 	make
 }
@@ -156,6 +164,7 @@ package() {
 	install -D -m555 "${srcdir}/nginx.sh" "${pkgdir}/etc/rc.d/${_pkgname}"
 	install -D -m644 "${srcdir}/nginx.logrotate" "${pkgdir}/etc/logrotate.d/${_pkgname}"
 	install -D -m644 "${srcdir}/nginx.conf" "${pkgdir}/etc/conf.d/${_pkgname}"
+    install -D -m644 "${srcdir}/nginx.service" "${pkgdir}/lib/systemd/system"
 	install -D -m644 "LICENSE" "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE"
 	install -D -m644 "man/nginx.8" "${pkgdir}/usr/share/man/man8/nginx.8"
 }
