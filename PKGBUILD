@@ -1,4 +1,4 @@
-# Maintainer: Alexander Kuznecov <akuznecov@adyax.com>
+# Maintainer: Alexander Kuznecov <alexander@kuznetcov.me>
 
 _pkgname="nginx"
 _user="http"
@@ -22,7 +22,7 @@ _fancyindex_ver="master"
 _httpupload_ver="2.2.0"
 
 pkgname=nginx-custom
-pkgver=1.2.6
+pkgver=1.2.7
 pkgrel=2
 pkgdesc="lightweight HTTP server and IMAP/POP3 proxy server with standard, additional and 3d party modules"
 arch=('i686' 'x86_64')
@@ -57,14 +57,14 @@ source=("http://nginx.org/download/nginx-$pkgver.tar.gz"
 		"https://github.com/agentzh/headers-more-nginx-module/tarball/${_headersmore_ver}"
 		"https://github.com/agentzh/echo-nginx-module/tarball/${_echo_ver}"
 		"https://github.com/gnosek/nginx-upstream-fair/tarball/${_upstreamfair_hash}"
-		"ngx_fancyindex-${_fancyindex_ver}::http://gitorious.org/ngx-fancyindex/ngx-fancyindex/archive-tarball/${_fancyindex_ver}"
+		"ngx_fancyindex-${_fancyindex_ver}.tar.gz::http://gitorious.org/ngx-fancyindex/ngx-fancyindex/archive-tarball/${_fancyindex_ver}"
 		"https://github.com/vkholodkov/nginx-upload-module/tarball/${_httpupload_ver}"
 		"nginx.sh"
 		"nginx.conf"
 		"nginx.logrotate"
 		"nginx.service")
 
-md5sums=('1350d26eb9b66364d9143fb3c4366ab6'
+md5sums=('d252f5c689a14a668e241c744ccf5f06'
          'b842d54d1a0e0c6a2c592e48d74357c1'
          'bc92b2d326e0ab937b4cf5ab489e71e3'
          '9a6acb984d81f5d7e04214d63ae94273'
@@ -94,7 +94,7 @@ build() {
 	mv agentzh-echo-nginx-module-* ${_echo_dirname}
 	mv masterzen-nginx-upload-progress-module-* ${_uploadprogess_dirname}
 	mv gnosek-nginx-upstream-fair-* ${_upstreamfair_dirname}
-	mv ngx-fancyindex-ngx-fancyindex ${_fancyindex_dirname}
+	mv ngx-fancyindex* ${_fancyindex_dirname}
 	mv vkholodkov-nginx-upload-module* ${_upload_dirname}
 
 	cd $_src_dir
