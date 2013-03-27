@@ -1,4 +1,4 @@
-# Maintainer: Alexander Kuznecov <akuznecov@adyax.com>
+# Maintainer: Alexander Kuznecov <alexander@kuznetcov.me>
 
 _pkgname="nginx"
 _user="http"
@@ -12,22 +12,23 @@ _lock_path="/var/lock"
 _log_path="/var/log/${_pkgname}"
 
 # 3d party modules versions:
-_cachepurge_ver="2.0"
-_slowfscache_ver="1.9"
-_echo_ver="v0.42"
+_cachepurge_ver="2.1"
+_slowfscache_ver="1.10"
+_echo_ver="v0.45"
 _headersmore_ver="v0.19"
-_uploadprogress_ver="v0.8.4"
+_uploadprogress_ver="v0.9.0"
 _upstreamfair_hash="a18b4099fbd458111983200e098b6f0c8efed4bc"
 _fancyindex_ver="master"
 _httpupload_ver="2.2.0"
+_authpam_ver="1.2"
 
 pkgname=nginx-custom-dev
-pkgver=1.3.12
+pkgver=1.3.15
 pkgrel=1
 pkgdesc="Development version of lightweight HTTP server and IMAP/POP3 proxy server with standard, additional and 3d party modules"
 arch=('i686' 'x86_64')
 
-depends=('pcre' 'zlib' 'openssl')
+depends=('pcre' 'zlib' 'openssl' 'pam')
 makedepends=(
 	'libxslt'
 	'gd'
@@ -57,24 +58,24 @@ source=("http://nginx.org/download/nginx-$pkgver.tar.gz"
 		"https://github.com/agentzh/headers-more-nginx-module/tarball/${_headersmore_ver}"
 		"https://github.com/agentzh/echo-nginx-module/tarball/${_echo_ver}"
 		"https://github.com/gnosek/nginx-upstream-fair/tarball/${_upstreamfair_hash}"
-		"ngx_fancyindex-${_fancyindex_ver}::http://gitorious.org/ngx-fancyindex/ngx-fancyindex/archive-tarball/${_fancyindex_ver}"
+		"ngx_fancyindex-${_fancyindex_ver}.tar.gz::http://gitorious.org/ngx-fancyindex/ngx-fancyindex/archive-tarball/${_fancyindex_ver}"
 		"https://github.com/vkholodkov/nginx-upload-module/tarball/${_httpupload_ver}"
-		"http://nginx.org/patches/spdy/patch.spdy.txt"
+		"http://web.iti.upv.es/~sto/nginx/ngx_http_auth_pam_module-${_authpam_ver}.tar.gz"
 		"nginx.sh"
 		"nginx.conf"
 		"nginx.logrotate"
 		"nginx.service")
 
-md5sums=('3cce66c0a46ce5ad31b482c8c927cdf6'
-         'b842d54d1a0e0c6a2c592e48d74357c1'
-         'bc92b2d326e0ab937b4cf5ab489e71e3'
-         '9a6acb984d81f5d7e04214d63ae94273'
+md5sums=('ded252047393c79a31b0862e9166a065'
+         'b403e963108f4e1700607cbe40916807'
+         '68a1af12d5c1218fb2b3e05ed7ff6f0c'
+         '9dd5dc90990dbaea68881a14d4b6d9f3'
          'e0f1c0cf4291387e8f5ac481cecd0ddd'
-         '6ba7b7190299f4fbe00033227c35f64e'
+         '851f882cf83732b2c70995227bdb07c6'
          'ac5e7f485476af70e0ee1c52016cddaf'
          '8db9d2ef8b7ac63f9e23901dc3d36ab1'
          '8766b931f29602889e0454749580a781'
-         'c02cd60057dc46f021cda058a884d0e0'
+         '3f6322663c6479a7b6b974bfa7417e5c'
          '3d5ff154f308ef7c844423e44ef9f4e1'
          '1fe7a3ca0773ce13f9f92e239a99f8b9'
          'ab1eb640c978536c1dad16674d6b3c3c'
@@ -91,17 +92,17 @@ build() {
 	local _upstreamfair_dirname="ngx_upstream_fair"
 	local _fancyindex_dirname="ngx_fancyindex"
 	local _upload_dirname="ngx_http_upload-${_upload_ver}"
+	local _authpam_dirname="ngx_authpam"
 
 	mv agentzh-headers-more-nginx-module-* ${_headersmore_dirname}
 	mv agentzh-echo-nginx-module-* ${_echo_dirname}
 	mv masterzen-nginx-upload-progress-module-* ${_uploadprogess_dirname}
 	mv gnosek-nginx-upstream-fair-* ${_upstreamfair_dirname}
-	mv ngx-fancyindex-ngx-fancyindex ${_fancyindex_dirname}
+	mv ngx-fancyindex* ${_fancyindex_dirname}
 	mv vkholodkov-nginx-upload-module* ${_upload_dirname}
+	mv ngx_http_auth_pam_module-${_authpam_ver} ${_authpam_dirname}
 
 	cd $_src_dir
-
-	patch -p1 < ../patch.spdy.txt
 
 	./configure \
 		--prefix="/${_conf_path}" \
@@ -120,6 +121,7 @@ build() {
 		--with-debug \
 		--with-ipv6 \
 		--with-imap \
+		--with-http_spdy_module \
 		--with-imap_ssl_module \
 		--with-http_ssl_module \
 		--with-http_stub_status_module \
@@ -143,7 +145,8 @@ build() {
 		--add-module=../${_slowfscache_dirname} \
 		--add-module=../${_uploadprogess_dirname} \
 		--add-module=../${_upstreamfair_dirname} \
-		--add-module=../${_fancyindex_dirname}
+		--add-module=../${_fancyindex_dirname} \
+		--add-module=../${_authpam_dirname}
 		#--add-module=../${_upload_dirname}
 
 	make
