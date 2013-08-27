@@ -11,102 +11,119 @@ _pid_path="/run"
 _lock_path="/var/lock"
 _log_path="/var/log/${_pkgname}"
 
-# 3d party modules versions:
+### 3d party modules:
 _cachepurge_ver="2.1"
+_cachepurge_dirname="ngx_cachepurge"
 _slowfscache_ver="1.10"
-_echo_ver="v0.45"
-_headersmore_ver="v0.19"
+_slowfscache_dirname="ngx_slowfscache"
+_echo_ver="v0.46"
+_echo_dirname="ngx_echo"
+_headersmore_ver="v0.22"
+_headersmore_dirname="ngx_headersmore"
 _uploadprogress_ver="v0.9.0"
+_uploadprogress_dirname="ngx_uploadprogress"
 _upstreamfair_hash="a18b4099fbd458111983200e098b6f0c8efed4bc"
-_fancyindex_ver="master"
-_httpupload_ver="2.2.0"
+_upstreamfair_dirname="ngx_upstreamfair"
+_fancyindex_ver="v0.3.2"
+_fancyindex_dirname="ngx_fancyindex"
 _authpam_ver="1.2"
+_authpam_dirname="ngx_authpam"
+_pagespeed_ver="1.6.29.5"
+_pagespeed_dirname="ngx_pagespeed"
+_accesskey_ver="2.0.3"
+_accesskey_dirname="ngx_accesskey"
+_rtmp_ver="v1.0.3"
+_rtmp_dirname="ngx_rtmp"
 
 pkgname=nginx-custom-dev
-pkgver=1.3.16
+pkgver=1.5.4
 pkgrel=1
 pkgdesc="Development version of lightweight HTTP server and IMAP/POP3 proxy server with standard, additional and 3d party modules"
 arch=('i686' 'x86_64')
 
-depends=('pcre' 'zlib' 'openssl' 'pam')
+depends=('pcre' 'zlib' 'openssl' 'pam' 'geoip' 'geoip-database')
 makedepends=(
 	'libxslt'
 	'gd'
+	'git'
 )
 
 url="http://nginx.org"
 license=('custom')
-conflicts=('nginx' 'nginx-unstable' 'nginx-svn' 'nginx-devel' 'nginx-custom') 
+conflicts=('nginx' 'nginx-unstable' 'nginx-svn' 'nginx-devel' 'nginx-custom' 'nginx-full') 
 provides=('nginx')
-backup=("${_conf_path}/conf/nginx.conf"
-	"${_conf_path}/conf/koi-win"
-	"${_conf_path}/conf/koi-utf"
-	"${_conf_path}/conf/win-utf"
-	"${_conf_path}/conf/mime.types"
-	"${_conf_path}/conf/fastcgi.conf"
-	"${_conf_path}/conf/fastcgi_params"
-	"${_conf_path}/conf/scgi_params"
-	"${_conf_path}/conf/uwsgi_params"
+backup=("${_conf_path}/nginx.conf"
+	"${_conf_path}/koi-win"
+	"${_conf_path}/koi-utf"
+	"${_conf_path}/win-utf"
+	"${_conf_path}/mime.types"
+	"${_conf_path}/fastcgi.conf"
+	"${_conf_path}/fastcgi_params"
+	"${_conf_path}/scgi_params"
+	"${_conf_path}/uwsgi_params"
 	"etc/logrotate.d/nginx")
 _user=http
 _group=http
 
-source=("http://nginx.org/download/nginx-$pkgver.tar.gz"
-        "http://labs.frickle.com/files/ngx_cache_purge-${_cachepurge_ver}.tar.gz"
-		"http://labs.frickle.com/files/ngx_slowfs_cache-${_slowfscache_ver}.tar.gz"
-		"https://github.com/masterzen/nginx-upload-progress-module/tarball/${_uploadprogress_ver}"
-		"https://github.com/agentzh/headers-more-nginx-module/tarball/${_headersmore_ver}"
-		"https://github.com/agentzh/echo-nginx-module/tarball/${_echo_ver}"
-		"https://github.com/gnosek/nginx-upstream-fair/tarball/${_upstreamfair_hash}"
-		"ngx_fancyindex-${_fancyindex_ver}.tar.gz::http://gitorious.org/ngx-fancyindex/ngx-fancyindex/archive-tarball/${_fancyindex_ver}"
-		"https://github.com/vkholodkov/nginx-upload-module/tarball/${_httpupload_ver}"
-		"http://web.iti.upv.es/~sto/nginx/ngx_http_auth_pam_module-${_authpam_ver}.tar.gz"
-		"nginx.sh"
+source=("nginx.sh"
 		"nginx.conf"
 		"nginx.logrotate"
-		"nginx.service")
+		"nginx.service"
+		"http://nginx.org/download/nginx-$pkgver.tar.gz"
+		"${_fancyindex_dirname}.tar.gz::https://github.com/aperezdc/ngx-fancyindex/archive/${_fancyindex_ver}.tar.gz"
+		"${_cachepurge_dirname}.tar.gz::http://labs.frickle.com/files/ngx_cache_purge-${_cachepurge_ver}.tar.gz"
+		"${_slowfscache_dirname}.tar.gz::http://labs.frickle.com/files/ngx_slowfs_cache-${_slowfscache_ver}.tar.gz"
+		"${_uploadprogress_dirname}.source::https://github.com/masterzen/nginx-upload-progress-module/tarball/${_uploadprogress_ver}"
+		"${_headersmore_dirname}.source::https://github.com/agentzh/headers-more-nginx-module/tarball/${_headersmore_ver}"
+		"${_echo_dirname}.source::https://github.com/agentzh/echo-nginx-module/tarball/${_echo_ver}"
+		"${_upstreamfair_dirname}.source::https://github.com/gnosek/nginx-upstream-fair/tarball/${_upstreamfair_hash}"
+		"${_authpam_dirname}.tar.gz::http://web.iti.upv.es/~sto/nginx/ngx_http_auth_pam_module-${_authpam_ver}.tar.gz"
+		"${_pagespeed_dirname}.zip::https://github.com/pagespeed/ngx_pagespeed/archive/release-${_pagespeed_ver}-beta.zip"
+		"psol.tar.gz::https://dl.google.com/dl/page-speed/psol/${_pagespeed_ver}.tar.gz"
+		"${_accesskey_dirname}.tar.gz::http://wiki.nginx.org/images/5/51/Nginx-accesskey-${_accesskey_ver}.tar.gz"
+		"${_rtmp_dirname}.zip::https://github.com/arut/nginx-rtmp-module/archive/${_rtmp_ver}.zip"
+)
 
-md5sums=('e1f4376a0da34f6d1f5e77e2b9be0de4'
+md5sums=('d56559ed5e8cc0b1c7adbe33f2300c4c'
+         '845cab784b50f1666bbf89d7435ac7af'
+         'ab1eb640c978536c1dad16674d6b3c3c'
+         'ce9a06bcaf66ec4a3c4eb59b636e0dfd'
+         'a099302604f1e98f38515bdde8b3be5a'
+         '3a90ac4ddd04b7ac0579acacb3cabcb4'
          'b403e963108f4e1700607cbe40916807'
          '68a1af12d5c1218fb2b3e05ed7ff6f0c'
          '9dd5dc90990dbaea68881a14d4b6d9f3'
-         'e0f1c0cf4291387e8f5ac481cecd0ddd'
-         '851f882cf83732b2c70995227bdb07c6'
+         '10ccd9e4088cf6d6ca7e21994b20bed0'
+         '201bc9630e11a8d9e88a4d70c00fe1a2'
          'ac5e7f485476af70e0ee1c52016cddaf'
-         '8db9d2ef8b7ac63f9e23901dc3d36ab1'
-         '8766b931f29602889e0454749580a781'
          '3f6322663c6479a7b6b974bfa7417e5c'
-         '3d5ff154f308ef7c844423e44ef9f4e1'
-         '1fe7a3ca0773ce13f9f92e239a99f8b9'
-         'ab1eb640c978536c1dad16674d6b3c3c'
-         '62d494d23aef31d0b867161f9fffa6eb')
+         '94500322e9861a72e33e3a5176d968c1'
+         'a26bec519f1e21809c18dc09f7a566bf'
+         '9b5304346d5139b1841f5baa01ab0cbe'
+         '688eb276ae0de464ad8bac693924d310')
 
 build() {
 	local _src_dir="${srcdir}/${_pkgname}-${pkgver}"
-	local _build_dir="${_src_dir}/objs"
-	local _cachepurge_dirname="ngx_cache_purge-${_cachepurge_ver}"
-	local _slowfscache_dirname="ngx_slowfs_cache-${_slowfscache_ver}"
-	local _headersmore_dirname="ngx_headers_more-${_headersmore_ver}"
-	local _echo_dirname="ngx_echo-${_echo_ver}"
-	local _uploadprogess_dirname="ngx_upload_progress-${_uploadprogress_ver}"
-	local _upstreamfair_dirname="ngx_upstream_fair"
-	local _fancyindex_dirname="ngx_fancyindex"
-	local _upload_dirname="ngx_http_upload-${_upload_ver}"
-	local _authpam_dirname="ngx_authpam"
 
+	mv ngx-fancyindex-* ${_fancyindex_dirname}
+	mv ngx_cache_purge-* ${_cachepurge_dirname}
+	mv ngx_slowfs_cache-* ${_slowfscache_dirname}
 	mv agentzh-headers-more-nginx-module-* ${_headersmore_dirname}
 	mv agentzh-echo-nginx-module-* ${_echo_dirname}
-	mv masterzen-nginx-upload-progress-module-* ${_uploadprogess_dirname}
+	mv masterzen-nginx-upload-progress-module-* ${_uploadprogress_dirname}
 	mv gnosek-nginx-upstream-fair-* ${_upstreamfair_dirname}
-	mv ngx-fancyindex* ${_fancyindex_dirname}
-	mv vkholodkov-nginx-upload-module* ${_upload_dirname}
 	mv ngx_http_auth_pam_module-${_authpam_ver} ${_authpam_dirname}
+	mv ngx_pagespeed-release* ${_pagespeed_dirname}
+	mv psol ${_pagespeed_dirname}/
+	mv nginx-accesskey* ${_accesskey_dirname}
+	mv nginx-rtmp-module* ${_rtmp_dirname}
 
 	cd $_src_dir
 
 	./configure \
 		--prefix="/${_conf_path}" \
-		--sbin-path="/usr/sbin/${_pkgname}" \
+		--conf-path="/${_conf_path}/nginx.conf" \
+		--sbin-path="/usr/bin/${_pkgname}" \
 		--pid-path="${_pid_path}/${_pkgname}.pid" \
 		--lock-path=${_pid_path}/${_pkgname}.lock \
 		--http-client-body-temp-path=${_tmp_path}/client_body_temp \
@@ -121,7 +138,6 @@ build() {
 		--with-debug \
 		--with-ipv6 \
 		--with-imap \
-		--with-http_spdy_module \
 		--with-imap_ssl_module \
 		--with-http_ssl_module \
 		--with-http_stub_status_module \
@@ -138,16 +154,21 @@ build() {
 		--with-http_secure_link_module \
 		--with-http_perl_module \
 		--with-http_degradation_module \
+		--with-http_geoip_module \
+		--with-http_spdy_module \
 		--with-http_gunzip_module \
+		--with-http_auth_request_module \
 		--add-module=../${_cachepurge_dirname} \
 		--add-module=../${_echo_dirname} \
 		--add-module=../${_headersmore_dirname} \
 		--add-module=../${_slowfscache_dirname} \
-		--add-module=../${_uploadprogess_dirname} \
+		--add-module=../${_uploadprogress_dirname} \
 		--add-module=../${_upstreamfair_dirname} \
 		--add-module=../${_fancyindex_dirname} \
-		--add-module=../${_authpam_dirname}
-		#--add-module=../${_upload_dirname}
+		--add-module=../${_authpam_dirname} \
+		--add-module=../${_pagespeed_dirname} \
+		--add-module=../${_accesskey_dirname} \
+		--add-module=../${_rtmp_dirname}
 
 	make
 }
@@ -156,7 +177,10 @@ package() {
 	cd "${srcdir}/${_pkgname}-${pkgver}"
 	make DESTDIR="$pkgdir/" install
 
-	sed -i -e "s/\<user\s\+\w\+;/user $_user;/g" $pkgdir/$_conf_path/conf/nginx.conf
+	sed -i -e "s/\<user\s\+\w\+;/user $_user;/g" ${pkgdir}/$_conf_path/nginx.conf
+
+	mkdir -p ${pkgdir}/$_conf_path/sites-enabled/
+	mkdir -p ${pkgdir}/$_conf_path/sites-available/
 
 	install -d "${pkgdir}/${_tmp_path}"
 	install -d "${pkgdir}/${_doc_root}"
