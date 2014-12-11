@@ -12,36 +12,40 @@ _lock_path="/var/lock"
 _log_path="/var/log/${_pkgname}"
 
 ### 3d party modules:
-_cachepurge_ver="2.1"
+_cachepurge_ver="2.2"
 _cachepurge_dirname="ngx_cachepurge"
 _slowfscache_ver="1.10"
 _slowfscache_dirname="ngx_slowfscache"
-_echo_ver="v0.46"
+_echo_ver="v0.57"
 _echo_dirname="ngx_echo"
-_headersmore_ver="v0.22"
+_headersmore_ver="v0.25"
 _headersmore_dirname="ngx_headersmore"
-_uploadprogress_ver="v0.9.0"
+_uploadprogress_ver="v0.9.1"
 _uploadprogress_dirname="ngx_uploadprogress"
 _upstreamfair_hash="a18b4099fbd458111983200e098b6f0c8efed4bc"
 _upstreamfair_dirname="ngx_upstreamfair"
-_fancyindex_ver="v0.3.2"
+_fancyindex_ver="v0.3.4"
 _fancyindex_dirname="ngx_fancyindex"
-_authpam_ver="1.2"
+_authpam_ver="1.3"
 _authpam_dirname="ngx_authpam"
-_pagespeed_ver="1.6.29.5"
+_pagespeed_ver="1.9.32.2"
 _pagespeed_dirname="ngx_pagespeed"
 _accesskey_ver="2.0.3"
 _accesskey_dirname="ngx_accesskey"
-_rtmp_ver="v1.0.3"
+_rtmp_ver="v1.1.6"
 _rtmp_dirname="ngx_rtmp"
+_davext_ver="v0.0.3"
+_davext_dirname="ngx_daxext"
+_naxsi_ver="0.53-2"
+_naxsi_dirname="ngx_naxsi"
 
 pkgname=nginx-custom-dev
-pkgver=1.5.4
+pkgver=1.7.8
 pkgrel=1
 pkgdesc="Development version of lightweight HTTP server and IMAP/POP3 proxy server with standard, additional and 3d party modules"
 arch=('i686' 'x86_64')
 
-depends=('pcre' 'zlib' 'openssl' 'pam' 'geoip' 'geoip-database')
+depends=('pcre' 'zlib' 'openssl' 'pam' 'geoip' 'geoip-database' 'gd' 'libxslt')
 makedepends=(
 	'libxslt'
 	'gd'
@@ -78,29 +82,33 @@ source=("nginx.sh"
 		"${_echo_dirname}.source::https://github.com/agentzh/echo-nginx-module/tarball/${_echo_ver}"
 		"${_upstreamfair_dirname}.source::https://github.com/gnosek/nginx-upstream-fair/tarball/${_upstreamfair_hash}"
 		"${_authpam_dirname}.tar.gz::http://web.iti.upv.es/~sto/nginx/ngx_http_auth_pam_module-${_authpam_ver}.tar.gz"
-		"${_pagespeed_dirname}.zip::https://github.com/pagespeed/ngx_pagespeed/archive/release-${_pagespeed_ver}-beta.zip"
+		"${_pagespeed_dirname}.zip::https://github.com/pagespeed/ngx_pagespeed/archive/v${_pagespeed_ver}-beta.zip"
 		"psol.tar.gz::https://dl.google.com/dl/page-speed/psol/${_pagespeed_ver}.tar.gz"
 		"${_accesskey_dirname}.tar.gz::http://wiki.nginx.org/images/5/51/Nginx-accesskey-${_accesskey_ver}.tar.gz"
 		"${_rtmp_dirname}.zip::https://github.com/arut/nginx-rtmp-module/archive/${_rtmp_ver}.zip"
+		"${_davext_dirname}.tar.gz::https://github.com/arut/nginx-dav-ext-module/archive/${_davext_ver}.tar.gz"
+		"${_naxsi_dirname}.tar.gz::https://github.com/nbs-system/naxsi/archive/${_naxsi_ver}.tar.gz"
 )
 
 md5sums=('d56559ed5e8cc0b1c7adbe33f2300c4c'
          '845cab784b50f1666bbf89d7435ac7af'
          'ab1eb640c978536c1dad16674d6b3c3c'
-         'ce9a06bcaf66ec4a3c4eb59b636e0dfd'
-         'a099302604f1e98f38515bdde8b3be5a'
-         '3a90ac4ddd04b7ac0579acacb3cabcb4'
-         'b403e963108f4e1700607cbe40916807'
+         '6696dc228a567506bca3096b5197c9db'
+         'fd5ab813fc1853cd8efe580ead577c3e'
+         '3087820bd0b9e657963a44f322a2fd4c'
+         '82c6281e14ffee73e0ad69c134d6e5e1'
          '68a1af12d5c1218fb2b3e05ed7ff6f0c'
-         '9dd5dc90990dbaea68881a14d4b6d9f3'
-         '10ccd9e4088cf6d6ca7e21994b20bed0'
-         '201bc9630e11a8d9e88a4d70c00fe1a2'
+         'f7dee95dbe8ada5f4d8e9d59ca1f4797'
+         '10e178b0cecf6ce891ee297d32ba2f14'
+         '1ba466e7efc03cd9934dd711ce9d84e7'
          'ac5e7f485476af70e0ee1c52016cddaf'
-         '3f6322663c6479a7b6b974bfa7417e5c'
-         '94500322e9861a72e33e3a5176d968c1'
-         'a26bec519f1e21809c18dc09f7a566bf'
+         'bf3c3389353f11f5f2047b67ce08ba79'
+         '8b668f7dbec86279b729f48b91ee780d'
+         '60a6b6e4e3c2fa7aff7fe25150b0f067'
          '9b5304346d5139b1841f5baa01ab0cbe'
-         '688eb276ae0de464ad8bac693924d310')
+         '6f00cba85c7248aa433526094228750a'
+         '2cb502dbda335be4ebd5fed0b3182bae'
+         '348b50914a1eedaed09a2509621adf43')
 
 build() {
 	local _src_dir="${srcdir}/${_pkgname}-${pkgver}"
@@ -108,15 +116,17 @@ build() {
 	mv ngx-fancyindex-* ${_fancyindex_dirname}
 	mv ngx_cache_purge-* ${_cachepurge_dirname}
 	mv ngx_slowfs_cache-* ${_slowfscache_dirname}
-	mv agentzh-headers-more-nginx-module-* ${_headersmore_dirname}
-	mv agentzh-echo-nginx-module-* ${_echo_dirname}
+	mv openresty-headers-more-nginx-module-* ${_headersmore_dirname}
+	mv openresty-echo-nginx-module-* ${_echo_dirname}
 	mv masterzen-nginx-upload-progress-module-* ${_uploadprogress_dirname}
 	mv gnosek-nginx-upstream-fair-* ${_upstreamfair_dirname}
 	mv ngx_http_auth_pam_module-${_authpam_ver} ${_authpam_dirname}
-	mv ngx_pagespeed-release* ${_pagespeed_dirname}
+	mv ngx_pagespeed-* ${_pagespeed_dirname}
 	mv psol ${_pagespeed_dirname}/
 	mv nginx-accesskey* ${_accesskey_dirname}
 	mv nginx-rtmp-module* ${_rtmp_dirname}
+	mv nginx-dav-ext-module* ${_davext_dirname}
+	mv naxsi* ${_naxsi_dirname}
 
 	cd $_src_dir
 
@@ -138,6 +148,7 @@ build() {
 		--with-debug \
 		--with-ipv6 \
 		--with-imap \
+		--add-module=../${_naxsi_dirname}/naxsi_src/ \
 		--with-imap_ssl_module \
 		--with-http_ssl_module \
 		--with-http_stub_status_module \
@@ -168,7 +179,8 @@ build() {
 		--add-module=../${_authpam_dirname} \
 		--add-module=../${_pagespeed_dirname} \
 		--add-module=../${_accesskey_dirname} \
-		--add-module=../${_rtmp_dirname}
+		--add-module=../${_rtmp_dirname} \
+		--add-module=../${_davext_dirname}
 
 	make
 }
